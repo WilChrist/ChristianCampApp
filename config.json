@@ -1,0 +1,7 @@
+const  databaseName = 'christiancampapp';
+class Config {
+
+    static get database(){
+        return databaseName;
+    }
+}
