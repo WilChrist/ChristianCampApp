@@ -24,10 +24,14 @@
             ],
             "styles": [
               "node_modules/materialize-css/dist/css/materialize.min.css",
+              "src/assets/css/materializeadmin.css",
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/materialize-css/dist/js/materialize.js"
+              "node_modules/jquery/dist/jquery.js",
+              "node_modules/materialize-css/dist/js/materialize.js",
+              "src/assets/js/materializeadmin.js",
+              "src/assets/js/initSideNav.js"
             ]
           },
           "configurations": {

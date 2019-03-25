@@ -1,7 +1,4 @@
-const  databaseName = 'christiancampapp';
-class Config {
-
-    static get database(){
-        return databaseName;
-    }
+{
+    "AppName":"GBU_App",
+    "database":"mongodb://localhost:27017/christiancampapp"
 }
