@@ -264,7 +264,13 @@ module.exports = {
 
 
 
-  /******************** Resolve City ***********************/
+  //******************** Resolve City ***********************/
+  
+  /**
+   * create a new city
+   * @param {*} param0 
+   * @param {*} req 
+   */
   createCity: async function({ cityInput }, req) {
     if (!req.isAuth) {
       const error = new Error('Not authenticated!');
@@ -303,11 +309,17 @@ module.exports = {
       updatedAt: createdCity.updatedAt.toISOString()
     };
   },
+
+  /**
+   * get all cities
+   * @param {*} page number of the page for pagination
+   * @param {*} req 
+   */
   cities: async function({ page }, req) {
     if (!req.isAuth) {
       const error = new Error('Not authenticated!');
       error.code = 401;
-      //throw error;
+      throw error;
     }
     
     const perPage = 2;
@@ -403,7 +415,7 @@ module.exports = {
     };
   },
 
-  /******************** Resolve Church ***********************/
+  //******************** Resolve Church ***********************/
   createChurch: async function({ churchInput }, req) {
     if (!req.isAuth) {
       const error = new Error('Not authenticated!');
@@ -423,7 +435,7 @@ module.exports = {
       error.code = 422;
       throw error;
     }
-    const existingChurch = await Church.fintOne({name : churchInput.name});
+    const existingChurch = await Church.findOne({name : churchInput.name});
     if (existingChurch) {
       const error = new Error('A church named like this already exist');
       error.code = 409;
@@ -489,7 +501,7 @@ module.exports = {
       error.code = 401;
       throw error;
     }
-    const church = await City.findById(id).populate('city').populate('users');
+    const church = await Church.findById(id).populate('city').populate('users');
     if (!church) {
       const error = new Error('No church found!');
       error.code = 404;
@@ -538,7 +550,7 @@ module.exports = {
       error.code = 422;
       throw error;
     }
-    const city = await city.findById(churchInput.city).populate('churches').populate('users');
+    const city = await City.findById(churchInput.city).populate('churches').populate('users');
     if (!city) {
       const error = new Error('city Not found!');
       error.code = 404;

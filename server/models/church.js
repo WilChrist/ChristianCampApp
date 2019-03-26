@@ -25,6 +25,6 @@ const churchSchema = new Schema({
     ref: 'City',
     required: true
   }
-});
+}, {timestamps:true});
 
 module.exports = mongoose.model('Church', churchSchema);

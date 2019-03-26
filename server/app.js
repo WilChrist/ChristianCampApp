@@ -22,7 +22,7 @@ const MONGODB_URI =`mongodb://${process.env.MONGO_USER}:${
 }@localhost:27017/${process.env.MONGO_DEFAULT_DATABASE}?authSource=admin`;
 console.log(MONGODB_URI);
 const accessLogStream = fs.createWriteStream(
-  path.join(__dirname, 'access.log'),
+  path.join(__dirname, 'logs/access.log'),
   { flags: 'a' }
 );
 

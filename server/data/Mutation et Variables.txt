@@ -1,0 +1,89 @@
+mutation myfirstMutation($cityInput: CityInputData!) {
+  createCity(cityInput: $cityInput) {
+    _id
+    name
+    description
+    createdAt
+  }
+}
+
+{
+  "cityInput": {
+    "name": "Rabat",
+    "description": "La Ville du Roi!"
+  }
+}
+
+mutation mysecondMutation($id:ID!, $cityInput: CityInputData!) {
+  updateCity(id:$id, cityInput: $cityInput) {
+    _id
+    name
+    description
+    createdAt
+    updatedAt
+  }
+}
+
+
+{
+  "id": "5c9a48c12f8ff8233475a582",
+  "cityInput": {
+    "name": "Rabat",
+    "description": "La Ville du Roi et la Capitale Politique !"
+  }
+}
+
+query myfirstQuery($id:ID!) {
+  city(id:$id, ) {
+    _id
+    name
+    description
+    updatedAt
+  }
+}
+
+{
+  "id": "5c9a48c12f8ff8233475a583",
+  "cityInput": {
+    "name": "Rabat",
+    "description": "La Ville du Roi et la Capitale Politique !"
+  }
+}
+
+
+query myfirstQuery($page:Int!) {
+  cities(page:$page ) {
+    cities{
+      name
+    }
+  }
+}
+
+{
+  "page": 1,
+  "id": "5c9a48c12f8ff8233475a583",
+  "cityInput": {
+    "name": "Rabat",
+    "description": "La Ville du Roi et la Capitale Politique !"
+  }
+}
+
+mutation myThirdMutation($churchInput: ChurchInputData!) {
+  createChurch(churchInput: $churchInput) {
+    _id
+    name
+    description
+    createdAt
+  }
+}
+
+
+{
+  "churchInput": {
+    "name": "Tremplin PlénitudeS de Vie",
+    "description": "une église à charactère évangélique en expansion",
+    "city": "5c9a488f2f8ff8233475a581"
+  }
+}
+
+
