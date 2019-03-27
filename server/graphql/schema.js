@@ -4,11 +4,17 @@ module.exports = buildSchema(`
 # ******************************* Core Data Shema *************************************
     """ User of the application, can be a participant or a staff member (with subrole) """
     type User {
-        # The Id of the User
+        """ The Id of the User """
         _id: ID!
+
+        """Constraint: must have at least 3 characters """
         firstName: String!
         lastName: String!
         email: String!
+        birthDate: String
+
+        """ Url of the picture of the user """
+        imageUrl: String
 
         """ Required Only for staff members """
         password: String
@@ -126,7 +132,8 @@ module.exports = buildSchema(`
         lastName: String!
         birthDate: String
         email: String!
-        password: String!
+        password: String
+        imageUrl: String
 
         numberOfParticipation: Int!
         actualYearOfStudy: Int!
@@ -138,7 +145,7 @@ module.exports = buildSchema(`
         role: String
 
         """ _id of the city the User belongs to """
-        city: String
+        city: String!
 
         """ _id of the local church the User belongs to """
         church: String

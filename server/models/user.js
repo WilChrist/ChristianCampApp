@@ -23,6 +23,10 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  imageUrl: {
+    type: String,
+    required: true
+  },
 
   numberOfParticipation: {
     type: Number,
@@ -45,7 +49,7 @@ const userSchema = new Schema({
   amountPayed: {
     type: Number,
     required: false,
-    default:275.0
+    default:0
   },
   role: {
     type: Schema.Types.ObjectId,

@@ -8,18 +8,33 @@ const Church = require('../models/church');
 const { clearImage } = require('../util/file');
 
 module.exports = {
-  /*createUser: async function({ userInput }, req) {
-    //   const email = args.userInput.email;
+  createUser: async function({ userInput }, req) {
+    
     const errors = [];
     if (!validator.isEmail(userInput.email)) {
       errors.push({ message: 'E-Mail is invalid.' });
     }
-    if (
+    if (validator.isEmpty(userInput.firstName) || !validator.isLength(userInput.firstName, { min: 3 })) {
+      errors.push({ message: 'First Name is invalid.' });
+    }
+    if (validator.isEmpty(userInput.lastName) || !validator.isLength(userInput.lastName, { min: 3 })) {
+      errors.push({ message: 'Last Name is invalid.' });
+    }
+    if (validator.isEmpty(userInput.numberOfParticipation) || !validator.isInt(userInput.numberOfParticipation)) {
+      errors.push({ message: 'Number Of Participation is invalid.' });
+    }
+    if (validator.isEmpty(userInput.actualYearOfStudy) || !validator.isInt(userInput.actualYearOfStudy)) {
+      errors.push({ message: 'Actual Year of Study is invalid.' });
+    }
+    if (validator.isEmpty(userInput.role) ) {
+      errors.push({ message: 'role is invalid.' });
+    }
+    /*if (
       validator.isEmpty(userInput.password) ||
       !validator.isLength(userInput.password, { min: 5 })
     ) {
       errors.push({ message: 'Password too short!' });
-    }
+    }*/
     if (errors.length > 0) {
       const error = new Error('Invalid input.');
       error.data = errors;
@@ -31,12 +46,58 @@ module.exports = {
       const error = new Error('User exists already!');
       throw error;
     }
-    const hashedPw = await bcrypt.hash(userInput.password, 12);
+    const existingRole=null;
+    const existingCity=null;
+    const existingChurch=null;
+
+    
+      existingRole = await Role.findOne({name: userInput.role});
+      if (!existingRole) {
+        const error = new Error('A Role named like this doesn t exist');
+        error.code = 404;
+        throw error;
+      }
+
+    if(userInput.city){
+      existingCity = await Role.findOne({name: userInput.city});
+      if (!existingCity) {
+        const error = new Error('A City named like this doesn t exist');
+        error.code = 409;
+        throw error;
+      }
+    }
+
+    if(userInput.church){
+      existingChurch = await Church.findOne({name: userInput.church});
+      if (!existingChurch) {
+        const error = new Error('A Church named like this doesn t exist');
+        error.code = 409;
+        throw error;
+      }
+    }
+    const hashedPw=null;
+    if(userInput.password){
+        hashedPw = await bcrypt.hash(userInput.password, 12);
+    }
+    const defaultRole = await Role.findOne({name: 'Participant'});
     const user = new User({
+      firstName: userInput.firstName,
+      lastName: userInput.lastName,
       email: userInput.email,
-      name: userInput.name,
-      password: hashedPw
+      password: hashedPw,
+      imageUrl: userInput.imageUrl?userInput.imageUrl:'/images/placeholder.jpg',
+      birthDate: userInput.birthDate,
+      numberOfParticipation: userInput.numberOfParticipation,
+      actualYearOfStudy: userInput.actualYearOfStudy,
+      isInLastYearOfStudy: userInput.isInLastYearOfStudy?userInput.isInLastYearOfStudy:false,
+      hasTotalyPayed: userInput.hasTotalyPayed ?userInput.hasTotalyPayed :false,
+      amountPayed: userInput.amountPayed?userInput.amountPayed:0,
+      city: existingCity,
+      church: existingChurch,
+      role: existingRole
     });
+    
+    
     const createdUser = await user.save();
     return { ...createdUser._doc, _id: createdUser._id.toString() };
   },
@@ -63,203 +124,7 @@ module.exports = {
     );
     return { token: token, userId: user._id.toString() };
   },
-  createPost: async function({ postInput }, req) {
-    if (!req.isAuth) {
-      const error = new Error('Not authenticated!');
-      error.code = 401;
-      throw error;
-    }
-    const errors = [];
-    if (
-      validator.isEmpty(postInput.title) ||
-      !validator.isLength(postInput.title, { min: 5 })
-    ) {
-      errors.push({ message: 'Title is invalid.' });
-    }
-    if (
-      validator.isEmpty(postInput.content) ||
-      !validator.isLength(postInput.content, { min: 5 })
-    ) {
-      errors.push({ message: 'Content is invalid.' });
-    }
-    if (errors.length > 0) {
-      const error = new Error('Invalid input.');
-      error.data = errors;
-      error.code = 422;
-      throw error;
-    }
-    const user = await User.findById(req.userId);
-    if (!user) {
-      const error = new Error('Invalid user.');
-      error.code = 401;
-      throw error;
-    }
-    const post = new Post({
-      title: postInput.title,
-      content: postInput.content,
-      imageUrl: postInput.imageUrl,
-      creator: user
-    });
-    const createdPost = await post.save();
-    user.posts.push(createdPost);
-    await user.save();
-    return {
-      ...createdPost._doc,
-      _id: createdPost._id.toString(),
-      createdAt: createdPost.createdAt.toISOString(),
-      updatedAt: createdPost.updatedAt.toISOString()
-    };
-  },
-  posts: async function({ page }, req) {
-    if (!req.isAuth) {
-      const error = new Error('Not authenticated!');
-      error.code = 401;
-      throw error;
-    }
-    if (!page) {
-      page = 1;
-    }
-    const perPage = 2;
-    const totalPosts = await Post.find().countDocuments();
-    const posts = await Post.find()
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * perPage)
-      .limit(perPage)
-      .populate('creator');
-    return {
-      posts: posts.map(p => {
-        return {
-          ...p._doc,
-          _id: p._id.toString(),
-          createdAt: p.createdAt.toISOString(),
-          updatedAt: p.updatedAt.toISOString()
-        };
-      }),
-      totalPosts: totalPosts
-    };
-  },
-  post: async function({ id }, req) {
-    if (!req.isAuth) {
-      const error = new Error('Not authenticated!');
-      error.code = 401;
-      throw error;
-    }
-    const post = await Post.findById(id).populate('creator');
-    if (!post) {
-      const error = new Error('No post found!');
-      error.code = 404;
-      throw error;
-    }
-    return {
-      ...post._doc,
-      _id: post._id.toString(),
-      createdAt: post.createdAt.toISOString(),
-      updatedAt: post.updatedAt.toISOString()
-    };
-  },
-  updatePost: async function({ id, postInput }, req) {
-    if (!req.isAuth) {
-      const error = new Error('Not authenticated!');
-      error.code = 401;
-      throw error;
-    }
-    const post = await Post.findById(id).populate('creator');
-    if (!post) {
-      const error = new Error('No post found!');
-      error.code = 404;
-      throw error;
-    }
-    if (post.creator._id.toString() !== req.userId.toString()) {
-      const error = new Error('Not authorized!');
-      error.code = 403;
-      throw error;
-    }
-    const errors = [];
-    if (
-      validator.isEmpty(postInput.title) ||
-      !validator.isLength(postInput.title, { min: 5 })
-    ) {
-      errors.push({ message: 'Title is invalid.' });
-    }
-    if (
-      validator.isEmpty(postInput.content) ||
-      !validator.isLength(postInput.content, { min: 5 })
-    ) {
-      errors.push({ message: 'Content is invalid.' });
-    }
-    if (errors.length > 0) {
-      const error = new Error('Invalid input.');
-      error.data = errors;
-      error.code = 422;
-      throw error;
-    }
-    post.title = postInput.title;
-    post.content = postInput.content;
-    if (postInput.imageUrl !== 'undefined') {
-      post.imageUrl = postInput.imageUrl;
-    }
-    const updatedPost = await post.save();
-    return {
-      ...updatedPost._doc,
-      _id: updatedPost._id.toString(),
-      createdAt: updatedPost.createdAt.toISOString(),
-      updatedAt: updatedPost.updatedAt.toISOString()
-    };
-  },
-  deletePost: async function({ id }, req) {
-    if (!req.isAuth) {
-      const error = new Error('Not authenticated!');
-      error.code = 401;
-      throw error;
-    }
-    const post = await Post.findById(id);
-    if (!post) {
-      const error = new Error('No post found!');
-      error.code = 404;
-      throw error;
-    }
-    if (post.creator.toString() !== req.userId.toString()) {
-      const error = new Error('Not authorized!');
-      error.code = 403;
-      throw error;
-    }
-    clearImage(post.imageUrl);
-    await Post.findByIdAndRemove(id);
-    const user = await User.findById(req.userId);
-    user.posts.pull(id);
-    await user.save();
-    return true;
-  },
-  user: async function(args, req) {
-    if (!req.isAuth) {
-      const error = new Error('Not authenticated!');
-      error.code = 401;
-      throw error;
-    }
-    const user = await User.findById(req.userId);
-    if (!user) {
-      const error = new Error('No user found!');
-      error.code = 404;
-      throw error;
-    }
-    return { ...user._doc, _id: user._id.toString() };
-  },
-  updateStatus: async function({ status }, req) {
-    if (!req.isAuth) {
-      const error = new Error('Not authenticated!');
-      error.code = 401;
-      throw error;
-    }
-    const user = await User.findById(req.userId);
-    if (!user) {
-      const error = new Error('No user found!');
-      error.code = 404;
-      throw error;
-    }
-    user.status = status;
-    await user.save();
-    return { ...user._doc, _id: user._id.toString() };
-  },*/
+ 
 
 
 
@@ -567,6 +432,156 @@ module.exports = {
       _id: updatedChurch._id.toString(),
       createdAt: updatedChurch.createdAt.toISOString(),
       updatedAt: updatedChurch.updatedAt.toISOString()
+    };
+  },
+
+  //******************** Resolve Role ***********************/
+  
+  /**
+   * create a new role
+   * @param {*} roleInput role data from client 
+   * @param {*} req 
+   */
+  createRole: async function({ roleInput }, req) {
+    if (!req.isAuth) {
+      const error = new Error('Not authenticated!');
+      error.code = 401;
+      throw error;
+    }
+    const errors = [];
+    if (
+      validator.isEmpty(roleInput.name) ||
+      !validator.isLength(roleInput.name, { min: 3 })
+    ) {
+      errors.push({ message: 'Name is invalid.' });
+    }
+    if (errors.length > 0) {
+      const error = new Error('Invalid input.');
+      error.data = errors;
+      error.code = 422;
+      throw error;
+    }
+    const existingRole = await Role.findOne({name: roleInput.name});
+    if (existingRole) {
+      const error = new Error('A role named like this already exist');
+      error.code = 409;
+      throw error;
+    }
+    const role = new Role({
+      name: roleInput.name,
+      description: roleInput.description
+    });
+    const createdRole = await role.save();
+    
+    return {
+      ...createdCity._doc,
+      _id: createdCity._id.toString(),
+      createdAt: createdCity.createdAt.toISOString(),
+      updatedAt: createdCity.updatedAt.toISOString()
+    };
+  },
+
+  /**
+   * get all Roles
+   * @param {*} page number of the page for pagination
+   * @param {*} req 
+   */
+  roles: async function({ page }, req) {
+    if (!req.isAuth) {
+      const error = new Error('Not authenticated!');
+      error.code = 401;
+      throw error;
+    }
+    
+    const perPage = 2;
+
+    if (!page) {
+      page = 1;
+      perPage=2147483647;
+    }
+    
+    const totalRoles = await Role.find().countDocuments();
+    const roles = await Role.find()
+      .sort({ name: 1 })
+      .skip((page - 1) * perPage)
+      .limit(perPage)
+      .populate('users');
+    return {
+      roles: roles.map(p => {
+        return {
+          ...p._doc,
+          _id: p._id.toString(),
+          createdAt: p.createdAt.toISOString(),
+          updatedAt: p.updatedAt.toISOString()
+        };
+      }),
+      totalRoles: totalRoles
+    };
+  },
+  role: async function({ id }, req) {
+    if (!req.isAuth) {
+      const error = new Error('Not authenticated!');
+      error.code = 401;
+      throw error;
+    }
+    const role = await Role.findById(id).populate('users');
+    if (!role) {
+      const error = new Error('No role found!');
+      error.code = 404;
+      throw error;
+    }
+    return {
+      ...role._doc,
+      _id: role._id.toString(),
+      createdAt: role.createdAt.toISOString(),
+      updatedAt: role.updatedAt.toISOString()
+    };
+  },
+  updateRole: async function({ id, roleInput }, req) {
+    if (!req.isAuth) {
+      const error = new Error('Not authenticated!');
+      error.code = 401;
+      throw error;
+    }
+    const role = await Role.findById(id).populate('users');
+    if (!role) {
+      const error = new Error('No role found!');
+      error.code = 404;
+      throw error;
+    }
+    const user = await User.findById(req.userId);
+    if (!user) {
+      const error = new Error('Invalid user.');
+      error.code = 401;
+      throw error;
+    }
+    if (user.role.name !== 'admin') {
+      const error = new Error('Not authorized!');
+      error.code = 403;
+      throw error;
+    }
+    const errors = [];
+    if (
+      validator.isEmpty(roleInput.name) ||
+      !validator.isLength(roleInput.name, { min: 3 })
+    ) {
+      errors.push({ message: 'Name is invalid.' });
+    }
+    if (errors.length > 0) {
+      const error = new Error('Invalid input.');
+      error.data = errors;
+      error.code = 422;
+      throw error;
+    }
+    role.name = roleInput.name;
+    role.description = roleInput.description;
+
+    const updatedRole = await role.save();
+    return {
+      ...updatedRole._doc,
+      _id: updatedRole._id.toString(),
+      createdAt: updatedRole.createdAt.toISOString(),
+      updatedAt: updatedRole.updatedAt.toISOString()
     };
   }
 };
