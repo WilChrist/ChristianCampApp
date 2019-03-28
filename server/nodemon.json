@@ -1,0 +1,9 @@
+{
+    "env": {
+        "MONGO_USER": "gbumapp",
+        "MONGO_PASSWORD": "BigGBUM&Password$",
+        "MONGO_DEFAULT_DATABASE": "ChristianCampApp",
+        "STRIPE_KEY": "sk_test_T8OE02SHDZWLwk4TYtrWlsat",
+        "NODE_ENV":"development"
+    }
+}
