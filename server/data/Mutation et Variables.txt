@@ -80,10 +80,47 @@ mutation myThirdMutation($churchInput: ChurchInputData!) {
 
 {
   "churchInput": {
-    "name": "Tremplin PlénitudeS de Vie",
-    "description": "une église à charactère évangélique en expansion",
+    "name": "Tremplin Plï¿½nitudeS de Vie",
+    "description": "une ï¿½glise ï¿½ charactï¿½re ï¿½vangï¿½lique en expansion",
     "city": "5c9a488f2f8ff8233475a581"
   }
 }
 
+mutation myThirdMutation($roleInput: RoleInputData!) {
+  createRole(roleInput: $roleInput) {
+    _id
+    name
+    description
+    createdAt
+  }
+}
+
+{
+  "roleInput": {
+    "name": "Participant",
+    "description": "Simple attendant to the camp"
+  }
+}
+
+mutation myfirstMutation($userInput: UserInputData!) {
+ createUser(userInput: $userInput) {
+   _id
+   email
+ }
+}
+
+
+
+{
+  "userInput": {
+    "firstName": "Nzesseu",
+    "lastName": "Willy",
+    "email": "willynzesseu@gmail.com",
+    "numberOfParticipation": 5,
+    "actualYearOfStudy": 4,
+    "isInLastYearOfStudy": true,
+    "city": "5c9a488f2f8ff8233475a581",
+    "imageUrl": "https://images.unsplash.com/photo-1553531540-d99596614a82?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80"
+  }
+}
 

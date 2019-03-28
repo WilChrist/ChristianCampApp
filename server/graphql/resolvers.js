@@ -1,10 +1,12 @@
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
+var mongoose = require('mongoose');
 
 const User = require('../models/user');
 const City = require('../models/city');
 const Church = require('../models/church');
+const Role = require('../models/role');
 const { clearImage } = require('../util/file');
 
 module.exports = {
@@ -20,21 +22,16 @@ module.exports = {
     if (validator.isEmpty(userInput.lastName) || !validator.isLength(userInput.lastName, { min: 3 })) {
       errors.push({ message: 'Last Name is invalid.' });
     }
-    if (validator.isEmpty(userInput.numberOfParticipation) || !validator.isInt(userInput.numberOfParticipation)) {
+    if (validator.isEmpty(userInput.numberOfParticipation.toString()) || !validator.isInt(userInput.numberOfParticipation.toString())) {
       errors.push({ message: 'Number Of Participation is invalid.' });
     }
-    if (validator.isEmpty(userInput.actualYearOfStudy) || !validator.isInt(userInput.actualYearOfStudy)) {
+    if (validator.isEmpty(userInput.actualYearOfStudy.toString()) || !validator.isInt(userInput.actualYearOfStudy.toString())) {
       errors.push({ message: 'Actual Year of Study is invalid.' });
     }
-    if (validator.isEmpty(userInput.role) ) {
-      errors.push({ message: 'role is invalid.' });
+    if (validator.isEmpty(userInput.city) ) {
+      errors.push({ message: 'city is mandatory.' });
     }
-    /*if (
-      validator.isEmpty(userInput.password) ||
-      !validator.isLength(userInput.password, { min: 5 })
-    ) {
-      errors.push({ message: 'Password too short!' });
-    }*/
+    
     if (errors.length > 0) {
       const error = new Error('Invalid input.');
       error.data = errors;
@@ -46,20 +43,23 @@ module.exports = {
       const error = new Error('User exists already!');
       throw error;
     }
-    const existingRole=null;
-    const existingCity=null;
-    const existingChurch=null;
+    let existingRole=null;
+    let existingCity=null;
+    let existingChurch=null;
 
     
-      existingRole = await Role.findOne({name: userInput.role});
-      if (!existingRole) {
-        const error = new Error('A Role named like this doesn t exist');
-        error.code = 404;
-        throw error;
-      }
-
+    if(userInput.role)
+      {
+        existingRole = await Role.findOne({name: userInput.role});
+        if (!existingRole) {
+          const error = new Error('A Role named like this doesn t exist');
+          error.code = 404;
+          throw error;
+        }
+    }
+    
     if(userInput.city){
-      existingCity = await Role.findOne({name: userInput.city});
+      existingCity = await City.findById(mongoose.Types.ObjectId(userInput.city));
       if (!existingCity) {
         const error = new Error('A City named like this doesn t exist');
         error.code = 409;
@@ -79,6 +79,7 @@ module.exports = {
     if(userInput.password){
         hashedPw = await bcrypt.hash(userInput.password, 12);
     }
+    
     const defaultRole = await Role.findOne({name: 'Participant'});
     const user = new User({
       firstName: userInput.firstName,
@@ -94,7 +95,7 @@ module.exports = {
       amountPayed: userInput.amountPayed?userInput.amountPayed:0,
       city: existingCity,
       church: existingChurch,
-      role: existingRole
+      role: existingRole?existingRole:defaultRole
     });
     
     
@@ -119,7 +120,7 @@ module.exports = {
         userId: user._id.toString(),
         email: user.email
       },
-      'somesupersecretsecret',
+      'GBUM@APP$Secret',
       { expiresIn: '1h' }
     );
     return { token: token, userId: user._id.toString() };
@@ -217,7 +218,7 @@ module.exports = {
     if (!req.isAuth) {
       const error = new Error('Not authenticated!');
       error.code = 401;
-     // throw error;
+      throw error;
     }
     const city = await City.findById(id).populate('churches').populate('users');
     if (!city) {
@@ -236,7 +237,7 @@ module.exports = {
     if (!req.isAuth) {
       const error = new Error('Not authenticated!');
       error.code = 401;
-      //throw error;
+      throw error;
     }
     const city = await City.findById(id).populate('churches').populate('users');
     if (!city) {
@@ -474,10 +475,10 @@ module.exports = {
     const createdRole = await role.save();
     
     return {
-      ...createdCity._doc,
-      _id: createdCity._id.toString(),
-      createdAt: createdCity.createdAt.toISOString(),
-      updatedAt: createdCity.updatedAt.toISOString()
+      ...createdRole._doc,
+      _id: createdRole._id.toString(),
+      createdAt: createdRole.createdAt.toISOString(),
+      updatedAt: createdRole.updatedAt.toISOString()
     };
   },
 
