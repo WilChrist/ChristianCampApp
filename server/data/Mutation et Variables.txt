@@ -1,0 +1,184 @@
+mutation myfirstMutation($cityInput: CityInputData!) {
+  createCity(cityInput: $cityInput) {
+    _id
+    name
+    description
+    createdAt
+  }
+}
+
+{
+  "cityInput": {
+    "name": "Rabat",
+    "description": "La Ville du Roi!"
+  }
+}
+
+mutation mysecondMutation($id:ID!, $cityInput: CityInputData!) {
+  updateCity(id:$id, cityInput: $cityInput) {
+    _id
+    name
+    description
+    createdAt
+    updatedAt
+  }
+}
+
+
+{
+  "id": "5c9a48c12f8ff8233475a582",
+  "cityInput": {
+    "name": "Rabat",
+    "description": "La Ville du Roi et la Capitale Politique !"
+  }
+}
+
+query myfirstQuery($id:ID!) {
+  city(id:$id, ) {
+    _id
+    name
+    description
+    updatedAt
+  }
+}
+
+{
+  "id": "5c9a48c12f8ff8233475a583",
+  "cityInput": {
+    "name": "Rabat",
+    "description": "La Ville du Roi et la Capitale Politique !"
+  }
+}
+
+
+query myfirstQuery($page:Int!) {
+  cities(page:$page ) {
+    cities{
+      name
+    }
+  }
+}
+
+{
+  "page": 1,
+  "id": "5c9a48c12f8ff8233475a583",
+  "cityInput": {
+    "name": "Rabat",
+    "description": "La Ville du Roi et la Capitale Politique !"
+  }
+}
+
+mutation myThirdMutation($churchInput: ChurchInputData!) {
+  createChurch(churchInput: $churchInput) {
+    _id
+    name
+    description
+    createdAt
+  }
+}
+
+
+{
+  "churchInput": {
+    "name": "Tremplin Pl�nitudeS de Vie",
+    "description": "une �glise � charact�re �vang�lique en expansion",
+    "city": "5c9a488f2f8ff8233475a581"
+  }
+}
+
+mutation myThirdMutation($roleInput: RoleInputData!) {
+  createRole(roleInput: $roleInput) {
+    _id
+    name
+    description
+    createdAt
+  }
+}
+
+{
+  "roleInput": {
+    "name": "Participant",
+    "description": "Simple attendant to the camp"
+  }
+}
+
+mutation myfirstMutation($userInput: UserInputData!) {
+ createUser(userInput: $userInput) {
+   _id
+   email
+ }
+}
+
+
+
+{
+  "userInput": {
+    "firstName": "Nzesseu",
+    "lastName": "Willy",
+    "email": "willynzesseu@gmail.com",
+    "numberOfParticipation": 5,
+    "actualYearOfStudy": 4,
+    "isInLastYearOfStudy": true,
+    "city": "5c9a488f2f8ff8233475a581",
+    "imageUrl": "https://images.unsplash.com/photo-1553531540-d99596614a82?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80"
+  }
+}
+
+mutation myfirstMutation($userInput: UserInputData!) {
+ createUser(userInput: $userInput) {
+   _id
+   email
+ }
+}
+
+{
+  "userInput": {
+    "firstName": "Djiomejoung",
+    "lastName": "Francis",
+    "email": "leroifrancis56@gmail.com",
+    "numberOfParticipation": 4,
+    "actualYearOfStudy": 5,
+    "isInLastYearOfStudy": true,
+    "city": "5c9a482d2f8ff8233475a580",
+    "birthDate": "2019-03-26T15:41:33.555+00:00",
+    "amountPayed": 275,
+    "hasTotalyPayed": true
+  }
+}
+
+mutation myfirstMutation($userInput: UserInputData!) {
+  createUser(userInput: $userInput) {
+    _id
+    email
+    city {
+      name
+    }
+    role {
+      name
+    }
+    church {
+      fullName
+    }
+  }
+}
+
+
+{
+  "userInput": {
+    "firstName": "James",
+    "lastName": "Koutene",
+    "email": "alexiewill@yahoo.fr",
+    "sexe": "M",
+    "password": "myPassWord54$",
+    "numberOfParticipation": 3,
+    "actualYearOfStudy": 4,
+    "isInLastYearOfStudy": false,
+    "city": "5c9a482d2f8ff8233475a580",
+    "role": "5c9e3b61205c5c0be01c5009",
+    "church": "5c9e208479d38616f03e3211",
+    "birthDate": "2019-03-26T15:41:33.555+00:00",
+    "imageUrl": "https://images.unsplash.com/photo-1553148790-140c3d8683cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80",
+    "amountPayed": 150,
+    "hasTotalyPayed": false
+  }
+}
