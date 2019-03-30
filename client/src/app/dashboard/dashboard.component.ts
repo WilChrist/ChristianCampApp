@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Participant} from '../participant/participant.model';
 
 @Component({
   selector: 'app-dashboard',

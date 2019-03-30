@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Participant} from '../participant.model';
+import {Participant} from '../../model/participant.model';
 
 @Component({
   selector: 'app-participant-list',
