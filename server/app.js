@@ -116,7 +116,7 @@ app.use((error, req, res, next) => {
 mongoose.connect( MONGODB_URI,{ useNewUrlParser: true })
   .then(result => {
     app.listen(process.env.PORT || 3000);
-    console.log("listen on port 3000...");
+    console.log("listen on port 3000..."+`${process.env.MAIL_PORT}`);
   })
   .catch(err => console.log(err));
 

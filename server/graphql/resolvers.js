@@ -2,12 +2,28 @@ const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
+var nodemailer = require('nodemailer');
 
 const User = require('../models/user');
 const City = require('../models/city');
 const Church = require('../models/church');
 const Role = require('../models/role');
 const { clearImage } = require('../util/file');
+
+var transporter = nodemailer.createTransport({
+  host: `${process.env.MAIL_HOST}`,
+  port: `${process.env.MAIL_PORT}`,
+  secure: `${process.env.MAIL_SECURE}`,
+  auth: {
+         user: `${process.env.MAIL_USER}`,
+         pass: `${process.env.Mail_PASSWORD}`
+     },
+     tls: {
+         rejectUnauthorized: false
+     }
+ });
+
+ 
 
 module.exports = {
   createUser: async function({ userInput }, req) {
@@ -18,6 +34,9 @@ module.exports = {
     }
     if (validator.isEmpty(userInput.firstName) || !validator.isLength(userInput.firstName, { min: 3 })) {
       errors.push({ message: 'First Name is invalid.' });
+    }
+    if (validator.isEmpty(userInput.sexe) || !validator.isIn(userInput.sexe, ["M","F"])) {
+      errors.push({ message: 'Sexe is invalid.' });
     }
     if (validator.isEmpty(userInput.lastName) || !validator.isLength(userInput.lastName, { min: 3 })) {
       errors.push({ message: 'Last Name is invalid.' });
@@ -40,7 +59,7 @@ module.exports = {
     }
     const existingUser = await User.findOne({ email: userInput.email });
     if (existingUser) {
-      const error = new Error('User exists already!');
+      const error = new Error('A User with this email already exists!');
       throw error;
     }
     let existingRole=null;
@@ -50,7 +69,7 @@ module.exports = {
     
     if(userInput.role)
       {
-        existingRole = await Role.findOne({name: userInput.role});
+        existingRole = await Role.findById(mongoose.Types.ObjectId(userInput.role));
         if (!existingRole) {
           const error = new Error('A Role named like this doesn t exist');
           error.code = 404;
@@ -68,14 +87,15 @@ module.exports = {
     }
 
     if(userInput.church){
-      existingChurch = await Church.findOne({name: userInput.church});
+      existingChurch = await Church.findById(mongoose.Types.ObjectId(userInput.church));
       if (!existingChurch) {
         const error = new Error('A Church named like this doesn t exist');
         error.code = 409;
         throw error;
       }
     }
-    const hashedPw=null;
+    const pass=userInput.password;
+    let hashedPw=null;
     if(userInput.password){
         hashedPw = await bcrypt.hash(userInput.password, 12);
     }
@@ -85,6 +105,7 @@ module.exports = {
       firstName: userInput.firstName,
       lastName: userInput.lastName,
       email: userInput.email,
+      sexe: userInput.sexe,
       password: hashedPw,
       imageUrl: userInput.imageUrl?userInput.imageUrl:'/images/placeholder.jpg',
       birthDate: userInput.birthDate,
@@ -100,6 +121,95 @@ module.exports = {
     
     
     const createdUser = await user.save();
+
+    if(existingRole){
+      existingRole.users.push(createdUser);
+      existingRole.save();
+    }else{
+      defaultRole.users.push(createdUser);
+      defaultRole.save();
+    }
+    if(existingChurch){
+      existingChurch.users.push(createdUser);
+      existingChurch.save();
+    }
+    if(existingCity){
+      existingCity.users.push(createdUser);
+      existingCity.save();
+    }
+
+    /*-------------------------Send MaiL-------------------------- */
+    let messageToStaffMember="";
+    let greeting=userInput.sexe=="M"?"Cher "+userInput.firstName:"Chère "+userInput.firstName;
+
+    if(existingRole && existingRole.name!=="Participant"){
+      messageToStaffMember=`
+      <br/><br/>
+      <b>Ps : </b>En tant que ${existingRole.name} vous avez le droit d'accéder à l'espace reservé à
+      d'administration de cette plateforme pour le bon exercice de vos fonctions à 
+      l'adresse suivante : <a href='${process.env.LINK_TO_STAFF_MEMBER_SPACE}'>${process.env.LINK_TO_STAFF_MEMBER_SPACE}</a>
+      <br/>
+      Votre adresse Email de connexion est : ${createdUser.email}
+      et votre mot de passe est : ${pass}
+      `;
+    }
+
+    const mailOptions = {
+      from: `${process.env.MAIL_FROM}`, // sender address
+      to: userInput.email, // list of receivers
+      subject: "Inscription au Camp d'Ifrane 2019", // Subject line
+      html: `
+      <h2>Bienvenue au Camp d'Ifrane 2019 ${greeting}</h2>
+      <p>
+          Le commité d'organisation du Camp d'Ifrane 2019 vous souhaite
+          la bienvenu à ce merveilleux rendez-vous divin :).
+      </p>
+    
+       <p>
+          Nous espérons que votre coeur est assoifé de recevoir abondament de Jésus.
+          Nous vous encourageons dans ce sens à rechercher et à concerver
+          cette soif durant toute la durée du camp et même après. En effet, Jésus a dit :
+
+          <br/><center>
+          <i>
+            Si quelqu'un a soif, qu'il vienne à moi, et qu'il boive. 
+            Celui qui croit en moi, des fleuves d'eau vive couleront de son sein, 
+            comme dit l'Ecriture.
+          </i> <b>Jean 7:37</b></center>
+    
+          <br/><br/>
+          A la fin du camp, vous trouverez à cette adresse
+            <a href='${process.env.LINK_TO_PICTURES}'>
+            ${process.env.LINK_TO_PICTURES}
+            </a> 
+          quelque photos du camp. vous devrez les télécharger sur votre PC dans les 1 Mois 
+          après le camp si vous voulez les conserver.
+    
+          <br/><br/>
+          Nous vous encourageons aussi une fois de retour dans votre ville à vous 
+          engager (encore plus) activement dans le GBU de votre ville afin d'aller 
+          plus loin dans votre croissance dans la connaissance et le témoignage de Christ!
+    
+          <br/><br/>
+          Sur ce, nous vous souhaitons un excellent camp d'Ifrane 2019.
+          Nous vous aimons!
+          ${messageToStaffMember}
+          <br/><br/>
+          <b> Signé, le Commité d'Organisation du Camp d'Ifrane 2019.</b>
+       </p>
+      `// plain text body
+    };
+
+    console.log(`${process.env.MAIL_PORT}`)
+    transporter.sendMail(mailOptions, function (err, info) {
+      if(err)
+        console.log(err)
+      else
+        console.log(info);
+      
+   });
+
+    /*-----------------------END Send MaiL------------------------ */
     return { ...createdUser._doc, _id: createdUser._id.toString() };
   },
   login: async function({ email, password }) {
@@ -286,7 +396,7 @@ module.exports = {
     if (!req.isAuth) {
       const error = new Error('Not authenticated!');
       error.code = 401;
-      throw error;
+      //throw error;
     }
     const errors = [];
     if (
@@ -307,20 +417,27 @@ module.exports = {
       error.code = 409;
       throw error;
     }
-    const city = await City.findById(churchInput.city);
-    if (!city) {
+    const existingCity = await City.findById(churchInput.city);
+    if (!existingCity) {
       const error = new Error('The City associated to this church doesn t exist!');
       error.code = 409;
       throw error;
     }
     const church = new Church({
       name: churchInput.name,
-      fullName: churchInput.name +" "+ city.name,
+      fullName: churchInput.name +" "+ existingCity.name,
       description: churchInput.description,
       city: churchInput.city
     });
     const createdChurch = await church.save();
-    
+
+    if(existingCity){
+      existingCity.churches.push(createdChurch);
+      existingCity.save();
+
+      createdChurch.city=existingCity;
+      createdChurch.save();
+    }
     return {
       ...createdChurch._doc,
       _id: createdChurch._id.toString(),

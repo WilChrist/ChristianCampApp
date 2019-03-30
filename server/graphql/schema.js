@@ -11,6 +11,7 @@ module.exports = buildSchema(`
         firstName: String!
         lastName: String!
         email: String!
+        sexe: String!
         birthDate: String
 
         """ Url of the picture of the user """
@@ -128,10 +129,17 @@ module.exports = buildSchema(`
 
     # ******************************* Input Data Shema *************************************
     input UserInputData {
+
+        """ Must have at least 3 character """
         firstName: String!
+
+        """ Must have at least 3 character """
         lastName: String!
         birthDate: String
         email: String!
+
+        """ Must be F or M """
+        sexe: String!
         password: String
         imageUrl: String
 
@@ -152,10 +160,14 @@ module.exports = buildSchema(`
     }
 
     input RoleInputData {
+
+        """ Must have at least 3 character """
         name: String!
         description: String
     }
     input ChurchInputData {
+
+        """ Must have at least 3 character """
         name: String!
         description: String
 
@@ -163,6 +175,8 @@ module.exports = buildSchema(`
         city: String!
     }
     input CityInputData {
+
+        """ Must have at least 3 character """
         name: String!
         description: String
     }

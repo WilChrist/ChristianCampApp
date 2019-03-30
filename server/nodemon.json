@@ -4,6 +4,17 @@
         "MONGO_PASSWORD": "BigGBUM&Password$",
         "MONGO_DEFAULT_DATABASE": "ChristianCampApp",
         "STRIPE_KEY": "sk_test_T8OE02SHDZWLwk4TYtrWlsat",
-        "NODE_ENV":"development"
+        "NODE_ENV":"development",
+
+        "MAIL_SERVICE_NAME":"gmail",
+        "MAIL_HOST":"smtp.googlemail.com",
+        "MAIL_SECURE":true,
+        "MAIL_PORT":465,
+        "MAIL_USER":"wiltestmail212@gmail.com",
+        "Mail_PASSWORD":"",
+        "LINK_TO_PICTURES":"https://drive.google.com/open?id=1_VO9MhmFSvDbWYkPYL5WA3aSmBj98HPs",
+        "LINK_TO_STAFF_MEMBER_SPACE":"http://localhost/staff",
+
+        "MAIL_FROM":"co.camp.ifrane@gmail.com"
     }
 }
