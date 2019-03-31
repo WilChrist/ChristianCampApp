@@ -4,7 +4,8 @@ import {LandingComponent} from './landing.component';
 import {BodyComponent} from './body/body.component';
 import {ParticipantComponent} from './participant/participant.component';
 import {HeaderComponent} from './header/header.component';
-import {FooterComponent} from './footer/footer.component'
+import {FooterComponent} from './footer/footer.component';
+import {EvaluationComponent} from './evaluation/evaluation.component'
 const routes: Routes = [
   {
     path: '',
@@ -24,7 +25,7 @@ const routes: Routes = [
       },
       {
         path:'evaluation',
-        component: ParticipantComponent
+        component: EvaluationComponent
       },
       {
         path:'apropos',
@@ -45,5 +46,6 @@ export const RoutingComponent=[
   BodyComponent,
   ParticipantComponent,
   HeaderComponent,
-  FooterComponent
+  FooterComponent,
+  EvaluationComponent
 ]
