@@ -23,14 +23,14 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/materialize-css/dist/css/materialize.min.css",
+              "node_modules/materialize-css/dist/css/materialize.css",
               "src/assets/css/materializeadmin.css",
               "node_modules/material-icons/css/material-icons.css",
               "src/styles.css"
             ],
             "scripts": [
-              "src/assets/js/jquery.js",
-              "node_modules/materialize-css/dist/js/materialize.min.js",
+              "node_modules/jquery/dist/jquery.js",
+              "node_modules/materialize-css/dist/js/materialize.js",
               "src/assets/js/materializeadmin.js",
               "src/assets/js/initSideNav.js"
             ]
