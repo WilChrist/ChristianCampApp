@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {DataService} from '../../services/data/data.service';
 
 @Component({
   selector: 'app-participant',
   templateUrl: './participant.component.html',
-  styleUrls: ['./participant.component.css']
+  styleUrls: ['./participant.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ParticipantComponent implements OnInit {
 

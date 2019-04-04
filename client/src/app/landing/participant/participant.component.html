@@ -1,32 +1,48 @@
-<div class="row">
-<div class="col s6 offset-s3">
-  <form class="col s12">
-    <div class="row">
-      <div class="input-field col s6">
-        <input id="firstName" name="firstName" type="text" class="validate">
-        <label for="firstName">Nom</label>
+<br/>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-lg-6 col-sm-12 mx-auto">
+  <form >
+      <div class="form-group">
+      <div class="input-group mb-3">
+          <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+          </div>
+          <input id="firstName" class="form-control" name="firstName" type="text"  placeholder="Nom">
+          <input  id="lastName" class="form-control" name="lastName" type="text"  placeholder="Prénom">
+        </div>
       </div>
-      <div class="input-field col s6">
-        <input  id="lastName"name="lastName" type="text" class="validate">
-        <label for="lastName">Prénom</label>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="input-field col s12">
-        <input   id="email" name="email" type="email" class="validate">
-        <label for="email">Email</label>
+    <div class="form-group">
+      <div class="input-group mb-3">
+          <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+            </div>
+        <input class="form-control" id="email" name="email" type="email"  placeholder="email">
       </div>
     </div>
-    <div class="row">
-      <div class="input-field col s12">
-        <input id="phone" name="phone" type="tel" class="validate">
-        <label for="phone">phone</label>
+    <div class="form-group">
+      <div class="input-group mb-3">
+          <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-phone-square"></i></span>
+            </div>
+        <input class="form-control" id="phone" name="phone" type="tel"  placeholder="Téléphone">
       </div>
     </div>
-    <div class="row">
-    <div class="input-field col s12">
-      <select name="city" id="city" class="validate">
+    <div class="form-group">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-birthday-cake"></i></span>
+              </div>
+          <input class="form-control" id="birthDate" name="birthDate" type="date"  placeholder="Date de naissance">
+        </div>
+      </div>
+    <div class="form-group">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-building"></i></span>
+          </div>
+      <select class="form-control" name="city" id="city" >
         <optgroup label="Zone Nord">
           <option value="Tanger">Tanger</option>
           <option value="Tétouan">Tétouan</option>
@@ -52,13 +68,23 @@
           <option value="Errachidia">Errachidia</option>
       </optgroup>
       </select>
-      <label>Ville</label>
     </div>
+    <div class="form-group">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-church"></i></span>
+              </div>
+          <input class="form-control" id="localChurch" name="localChurch" type="text"  placeholder="église locale">
+        </div>
+      </div>
   </div>
-  <div class="row">
-    <div class="input-field col s12">
-      <select name="nbPart" id="nbPart" class="validate">
-          <option value="0" selected disabled>Nombre  </option>
+  <div class="form-group">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+          </div>
+      <select class="form-control" name="nbPart" id="nbPart" >
+          <option value="0" selected disabled>Nombre de participations </option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -67,12 +93,14 @@
           <option value="6">6</option>
           <option value="7">7</option>
       </select>
-      <label>Nombre de Participations au camp</label>
     </div>
   </div>
-  <div class="row">
-        <div class="input-field col s12">
-            <select name="nationality" id="nationality" class="validate">
+  <div class="form-group">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-globe-africa"></i></span>
+              </div>
+            <select class="form-control" name="nationality" id="nationality">
                 <option value="0" selected disabled>Nationalité  </option>
                 <optgroup label="Afrique">
                     <option value="afriqueDuSud">Afrique Du Sud</option>
@@ -277,21 +305,21 @@
                     <option value="vanuatu">Vanuatu</option>
                 </optgroup>
             </select>
-            <label >Nationalité</label>
         </div>
   </div>
-  <div class="row">
-      <div class="input-field col s12">
-          <input  name="picture" id="picture" type="file" class="validate">
-          <label for="picture">Photo de Profil</label>
+  <div class="form-group">
+      <div class="input-group mb-3">
+          <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-camera"></i></span>
+            </div>
+          <input class="form-control" style="display:inline-block" name="picture" id="picture" type="file" >
         </div>
   </div>
-  <div class="row">
-    <button class="btn waves-effect waves-light" type="submit" name="action">VALIDER
-      <i class="material-icons right">send</i>
+  <div class="form-group">
+    <button class="btn btn-primary" type="submit" name="action">VALIDER
     </button>
   </div>
   </form>
-  
+</div>
 </div>
 </div>

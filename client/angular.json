@@ -23,16 +23,16 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/materialize-css/dist/css/materialize.css",
-              "src/assets/css/materializeadmin.css",
-              "node_modules/material-icons/css/material-icons.css",
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/assets/css/sb-admin-2.min.css",
+              "src/assets/vendor/fontawesome-free/css/all.min.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.js",
-              "node_modules/materialize-css/dist/js/materialize.js",
-              "src/assets/js/materializeadmin.js",
-              "src/assets/js/initSideNav.js"
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/popper.js/dist/umd/popper.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "src/assets/js/sb-admin-2.min.js"  
             ]
           },
           "configurations": {

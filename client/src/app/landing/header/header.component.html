@@ -1,22 +1,25 @@
-<nav class="deep-orange">
-  <div class="nav-wrapper">
-    <a href="#!" class="brand-logo">
-      <img class="responsive-img" src="assets/images/logo.png" style="width:5vw; margin: .5vw; border: white solid 2px;" alt="affiche du camp">
-
-    </a>
-    <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-    <ul class="right hide-on-med-and-down">
-      <li><a routerLink="/">Accueil</a></li>
-      <li><a routerLink="/inscription">Inscription</a></li>
-      <li><a routerLink="/evaluation">Evaluation Camp</a></li>
-      <li><a routerLink="/apropos">à Propos</a></li>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  <a class="navbar-brand" href="#!">
+    <img class="responsive-img" src="assets/images/logo.png" style="width:4vw; margin: .2vw; border: white solid 2px;" alt="affiche du camp">
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/">Accueil</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/inscription">Inscription</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/evaluation">Evaluation Camp</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/apropos">à Propos</a>
+      </li>    
     </ul>
-  </div>
+  </div>  
 </nav>
 
-<ul class="sidenav" id="mobile-demo">
-  <li><a routerLink="/">Accueil</a></li>
-  <li><a routerLink="/inscription">Inscription</a></li>
-  <li><a routerLink="/evaluation">Evaluation Camp</a></li>
-  <li><a routerLink="/apropos">à Propos</a></li>
-</ul>

@@ -1,17 +1,15 @@
 <div class="row">
-  <div class="col s12 m6 l4" *ngFor="let participant of participants">
-    <div class="card">
-      <div class="card-image">
-        <img src={{participant.imageUrl}}>
-        <span class="card-title">{{participant.firstName}}</span>
-      </div>
-      <div class="card-content">
-        <p>Hi, I'm {{participant.firstName}} {{participant.lastName}}! I'm from {{participant.nationality}} !</p>
-      </div>
-      <div class="card-action">
-        <a href="#">{{participant.city}}</a>
-        <a href="#">{{participant.localChurch}}</a>
+  <div class="col-sm-12 col-md-4" *ngFor="let participant of participants">
+    <div class="card rounded-0">
+      <img class="card-img-top rounded-0" src="{{participant.imageUrl}}">
+      <div class="card-body ">
+        <h4 class="card-title">{{participant.firstName}}</h4>
+        <p class="card-text">Hi, I'm {{participant.firstName}} {{participant.lastName}}! I'm from
+          {{participant.nationality}} !</p>
+        <a href="#" class="btn btn-warning rounded-0">{{participant.city}}</a>
+        <a href="#" class="btn btn-primary rounded-0">{{participant.localChurch}}</a>
       </div>
     </div>
+
   </div>
 </div>
