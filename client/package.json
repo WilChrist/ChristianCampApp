@@ -28,7 +28,7 @@
     "materialize-css": "0.100.2",
     "rxjs": "6.2.2",
     "tslib": "1.9.3",
-    "zone.js": "0.8.29"
+    "zone.js": "0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.13.9",
