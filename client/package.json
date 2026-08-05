@@ -27,7 +27,7 @@
     "jquery": "3.4.1",
     "materialize-css": "0.100.2",
     "rxjs": "6.2.2",
-    "tslib": "1.9.3",
+    "tslib": "1.14.1",
     "zone.js": "0.8.29"
   },
   "devDependencies": {
